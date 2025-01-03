@@ -1,0 +1,7 @@
+name: AntiRelog
+version: '${version}'
+main: ru.shirk.antirelog.AntiRelog
+api-version: '1.16'
+authors: [shirkqqe]
+description: AntiRelog plugin
+website: https://github.com/shirkqqe
