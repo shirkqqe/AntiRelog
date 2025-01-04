@@ -13,7 +13,7 @@ import ru.shirk.antirelog.combat.CombatPlayer;
 @RequiredArgsConstructor
 public class CombatStartEvent extends Event {
 
-    private final @NonNull Cause cause;
+    private final @NonNull CombatPreStartEvent.Cause cause;
     private final @Nullable CombatPlayer initiator;
     private final @Nullable CombatPlayer damaged;
     @Getter
@@ -22,10 +22,5 @@ public class CombatStartEvent extends Event {
     @Override
     public @NotNull HandlerList getHandlers() {
         return handlerList;
-    }
-
-    public enum Cause {
-        DAMAGE,
-        FORCE;
     }
 }

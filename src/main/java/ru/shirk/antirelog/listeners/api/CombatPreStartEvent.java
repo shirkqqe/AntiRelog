@@ -19,7 +19,7 @@ public class CombatPreStartEvent extends Event implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private final @Nullable CombatPlayer initiator;
     private final @Nullable CombatPlayer damaged;
-    private final @NonNull CombatStartEvent.Cause cause;
+    private final @NonNull Cause cause;
     private final int timer;
 
     @Override
@@ -35,5 +35,10 @@ public class CombatPreStartEvent extends Event implements Cancellable {
     @Override
     public @NotNull HandlerList getHandlers() {
         return handlerList;
+    }
+
+    public enum Cause {
+        DAMAGE,
+        FORCE;
     }
 }
