@@ -5,3 +5,7 @@ api-version: '1.16'
 authors: [shirkqqe]
 description: AntiRelog plugin
 website: https://github.com/shirkqqe
+
+commands:
+  antirelog:
+    description: ""
