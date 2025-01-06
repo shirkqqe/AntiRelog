@@ -4,6 +4,7 @@ import lombok.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import ru.shirk.antirelog.AntiRelog;
+import ru.shirk.antirelog.listeners.api.CombatPreStartEvent;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -3,7 +3,10 @@ package ru.shirk.antirelog;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.shirk.antirelog.combat.CombatManager;
+import ru.shirk.antirelog.commands.Commands;
 import ru.shirk.antirelog.storage.files.ConfigurationManager;
+
+import java.util.Objects;
 
 public final class AntiRelog extends JavaPlugin {
 
@@ -19,6 +22,8 @@ public final class AntiRelog extends JavaPlugin {
         instance = this;
         combatManager = new CombatManager(this);
         configurationManager = new ConfigurationManager();
+        Objects.requireNonNull(this.getServer().getPluginCommand("antirelog")).setExecutor(new Commands(combatManager));
+        Objects.requireNonNull(this.getServer().getPluginCommand("antirelog")).setTabCompleter(new Commands(combatManager));
     }
 
     @Override

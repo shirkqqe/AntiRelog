@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
+import ru.shirk.antirelog.listeners.api.CombatPreStartEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,16 +25,23 @@ public class CombatManager implements Listener {
     public void startCombatSafe(@NonNull Player initiator, @NonNull Player damaged) {
         CombatPlayer combatInitiator = getCombatPlayer(initiator);
         CombatPlayer combatDamaged = getCombatPlayer(damaged);
+
         if (combatInitiator == null) {
             combatInitiator = new CombatPlayer(initiator);
-            combatInitiator.handleStartCombat();
-            if (combatDamaged != null) combatInitiator.addEnemy(combatDamaged);
         }
         if (combatDamaged == null) {
             combatDamaged = new CombatPlayer(damaged);
-            combatDamaged.handleStartCombat();
-            combatDamaged.addEnemy(combatInitiator);
         }
+        final CombatPreStartEvent event = new CombatPreStartEvent(combatInitiator, combatDamaged, CombatPreStartEvent.
+                Cause.DAMAGE, 30);
+        if (event.isCancelled()) return;
+
+        combatInitiator.handleStartCombat();
+        combatInitiator.addEnemy(combatDamaged);
+
+        combatDamaged.handleStartCombat();
+        combatDamaged.addEnemy(combatInitiator);
+
         combatPlayers.putIfAbsent(initiator.getUniqueId(), combatInitiator);
         combatPlayers.putIfAbsent(damaged.getUniqueId(), combatDamaged);
     }
