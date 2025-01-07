@@ -10,6 +10,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.shirk.antirelog.AntiRelog;
 import ru.shirk.antirelog.combat.CombatManager;
 
 import java.util.List;
@@ -36,7 +37,11 @@ public class Commands implements CommandExecutor, TabCompleter {
                     sender.sendMessage("Player not found!");
                     return true;
                 }
-                combatManager.forceStartCombat(player);
+                final CombatManager.Result result = combatManager.forceStartCombat(player);
+                sender.sendMessage(result.name());
+            }
+            case "reload" -> {
+                AntiRelog.getConfigurationManager().reloadConfigs();
                 sender.sendMessage("Success!");
             }
         }
