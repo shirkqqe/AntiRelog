@@ -1,0 +1,16 @@
+scoreboard:
+  enabled: true
+  title: "title"
+  board:
+    - ""
+    - "asd"
+    - "dsa"
+    - ""
+bossbar:
+  enabled: true
+  title: "BossBar"
+  color: RED
+  style: SOLID
+actionbar:
+  enabled: true
+  text: "actionbar"
