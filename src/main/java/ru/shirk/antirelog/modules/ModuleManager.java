@@ -2,8 +2,8 @@ package ru.shirk.antirelog.modules;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.ConfigurationSection;
+import ru.shirk.antirelog.combat.CombatPlayer;
 import ru.shirk.antirelog.storage.files.Configuration;
 import ru.shirk.antirelog.storage.files.ConfigurationManager;
 

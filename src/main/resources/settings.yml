@@ -14,3 +14,6 @@ bossbar:
 actionbar:
   enabled: true
   text: "actionbar"
+enemy: " &6&l&n❚&f {player} &7(&b{ping} ⇆&7) {health}/20 &4❤"
+lastEnemy: " &6&l❚ &f{player} &7(&b{ping} ⇆&7) {health}/20 &4❤"
+noEnemies: " Пусто"
