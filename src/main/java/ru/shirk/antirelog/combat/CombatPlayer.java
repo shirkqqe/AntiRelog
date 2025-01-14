@@ -8,6 +8,7 @@ import me.neznamy.tab.api.scoreboard.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Nullable;
 import ru.shirk.antirelog.AntiRelog;
 import ru.shirk.antirelog.modules.ModuleManager;
@@ -26,21 +27,22 @@ public class CombatPlayer {
     private final @NonNull ArrayList<CombatPlayer> enemies = new ArrayList<>();
     private final @NonNull ModuleManager moduleManager = AntiRelog.getModuleManager();
     private @Nullable BossBar bossBar;
+    private @Nullable BukkitTask task;
 
     public void handleStartCombat() {
         time = 30;
-        Bukkit.getScheduler().runTaskTimerAsynchronously(AntiRelog.getInstance(), (task) -> {
+        task = Bukkit.getScheduler().runTaskTimerAsynchronously(AntiRelog.getInstance(), () -> {
             if (time > 0) {
                 showModules();
                 time--;
                 return;
             }
-            handleEndCombat();
-            task.cancel();
+            AntiRelog.getCombatManager().endCombat(base);
         }, 20, 20);
     }
 
     public void handleEndCombat() {
+        if (task != null) task.cancel();
         time = 0;
         clearModules();
     }
