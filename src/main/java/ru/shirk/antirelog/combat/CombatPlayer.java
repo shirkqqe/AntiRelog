@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Nullable;
 import ru.shirk.antirelog.AntiRelog;
+import ru.shirk.antirelog.listeners.api.CombatTickEvent;
 import ru.shirk.antirelog.modules.ModuleManager;
 import ru.shirk.antirelog.storage.files.Configuration;
 
@@ -33,6 +34,8 @@ public class CombatPlayer {
         time = 30;
         task = Bukkit.getScheduler().runTaskTimerAsynchronously(AntiRelog.getInstance(), () -> {
             if (time > 0) {
+                final CombatTickEvent event = new CombatTickEvent(time, time - 1, this);
+                Bukkit.getPluginManager().callEvent(event);
                 showModules();
                 time--;
                 return;
