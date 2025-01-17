@@ -29,7 +29,7 @@ public final class AntiRelog extends JavaPlugin {
             return;
         }
         instance = this;
-        combatManager = new CombatManager(this);
+        combatManager = new CombatManager();
         configurationManager = new ConfigurationManager();
         moduleManager = new ModuleManager(configurationManager);
         Objects.requireNonNull(this.getServer().getPluginCommand("antirelog")).setExecutor(new Commands(combatManager));

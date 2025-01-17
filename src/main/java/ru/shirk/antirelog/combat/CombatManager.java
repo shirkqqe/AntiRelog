@@ -17,7 +17,6 @@ import java.util.UUID;
 public class CombatManager implements Listener {
 
     private final Map<UUID, CombatPlayer> combatPlayers = new HashMap<>();
-    private final JavaPlugin plugin;
 
     public @Nullable CombatPlayer getCombatPlayer(@NonNull Player player) {
         return combatPlayers.get(player.getUniqueId());
