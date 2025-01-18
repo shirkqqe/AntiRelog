@@ -24,7 +24,7 @@ public final class AntiRelog extends JavaPlugin {
     public void onEnable() {
         if (!this.getServer().getPluginManager().isPluginEnabled("TAB")) {
             this.getLogger().severe("Плагин не может работать без TAB, " +
-                    "пожалуйста установите эти плагины для корректной работы.");
+                    "пожалуйста установите этот плагин для корректной работы.");
             this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
