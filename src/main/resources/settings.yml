@@ -29,10 +29,23 @@ enemy: " &6&l&n❚&f {player} &7(&b{ping} ⇆&7) {health}/20 &4❤"
 lastEnemy: " &6&l❚ &f{player} &7(&b{ping} ⇆&7) {health}/20 &4❤"
 noEnemies: " Пусто"
 disableCommandsInCombat: true
+cooldowns:
+  GOLDEN_APPLE: 15
+combatTime: 30
 messages:
   startCombat: "&4▶&f Вы вошли в режим &6PVP!"
   endCombat: "&b▶&f Вы вышли из режима &bPVP!"
   leaveInCombatBroadcast: "&4▶&f Игрок &c{player} &fпокинул игру во время &x&F&F&6&7&0&0ПВП и был наказан."
   commandsDisabled: "&4▶&f Вы не можете использовать команды в &6PvP."
-
-
+  help: |-
+    &r
+    &fКоманда /antirelog:
+    &fВвести игрока в бой принудительно - /antirelog start (ник)
+    &fВывести игрока из боя принудительно - /antirelog end (ник)
+    &fПерезагрузить конфиг - /antirelog reload
+    &r
+  playerAlreadyInCombat: "&4▶&f Игрок уже в режиме PvP!"
+  forceCombatStart: "&4▶&f Вы успешно ввели в режим PvP игрока &6{player}"
+  forceCombatEnd: "&4▶&f Вы успешно убрали режим PvP игроку &6{player}"
+  reloaded: "&4▶&f Конфиг успешно перезагружен!"
+  perm: "&7Команда не найдена или у Вас нет доступа к ней."

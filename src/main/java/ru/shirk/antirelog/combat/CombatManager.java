@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
+import ru.shirk.antirelog.AntiRelog;
 import ru.shirk.antirelog.listeners.api.CombatPreStartEvent;
 
 import java.util.HashMap;
@@ -33,18 +34,20 @@ public class CombatManager implements Listener {
             combatDamaged = new CombatPlayer(damaged);
         }
         final CombatPreStartEvent event = new CombatPreStartEvent(combatInitiator, combatDamaged, CombatPreStartEvent.
-                Cause.DAMAGE, 30);
+                Cause.DAMAGE, AntiRelog.getConfigurationManager().getConfig("settings.yml").ch("combatTime"));
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return;
 
-        combatInitiator.handleStartCombat();
-        combatInitiator.addEnemy(combatDamaged);
-
-        combatDamaged.handleStartCombat();
-        combatDamaged.addEnemy(combatInitiator);
-
-        combatPlayers.putIfAbsent(initiator.getUniqueId(), combatInitiator);
-        combatPlayers.putIfAbsent(damaged.getUniqueId(), combatDamaged);
+        if (!initiator.hasPermission("antirelog.bypass")) {
+            combatInitiator.handleStartCombat();
+            combatInitiator.addEnemy(combatDamaged);
+            combatPlayers.putIfAbsent(initiator.getUniqueId(), combatInitiator);
+        }
+        if (!damaged.hasPermission("antirelog.bypass")) {
+            combatDamaged.handleStartCombat();
+            combatDamaged.addEnemy(combatInitiator);
+            combatPlayers.putIfAbsent(damaged.getUniqueId(), combatDamaged);
+        }
     }
 
     public @NonNull Result forceStartCombat(@NonNull Player player) {

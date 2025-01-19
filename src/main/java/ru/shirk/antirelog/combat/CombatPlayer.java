@@ -32,7 +32,7 @@ public class CombatPlayer {
     private @Nullable BukkitTask task;
 
     public void handleStartCombat() {
-        time = 30;
+        time = AntiRelog.getConfigurationManager().getConfig("settings.yml").ch("combatTime");
         AntiRelog.getConfigurationManager().getConfig("settings.yml").sendMessage(base,
                 "messages.startCombat");
         if (moduleManager.getTitleModule().isEnabled()) {
@@ -96,7 +96,8 @@ public class CombatPlayer {
                     String.valueOf(time))));
             bossBar.setVisible(true);
             bossBar.addPlayer(base);
-            bossBar.setProgress((double) time / 30);
+            bossBar.setProgress((double) time / AntiRelog.getConfigurationManager().getConfig("settings.yml")
+                    .ch("combatTime"));
         }
 
         if (moduleManager.getScoreboardModule().isEnabled()) {

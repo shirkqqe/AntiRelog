@@ -6,17 +6,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import ru.shirk.antirelog.AntiRelog;
 import ru.shirk.antirelog.combat.CombatManager;
+import ru.shirk.antirelog.tools.ItemsCooldownTool;
 
 @RequiredArgsConstructor
 public class BukkitListeners implements Listener {
 
     private final @NonNull CombatManager combatManager;
+    private final @NonNull ItemsCooldownTool itemsCooldownTool;
 
     @EventHandler
     private void onDamage(EntityDamageByEntityEvent event) {
@@ -51,5 +55,11 @@ public class BukkitListeners implements Listener {
         event.setCancelled(true);
         player.sendMessage(AntiRelog.getConfigurationManager().getConfig("settings.yml")
                 .c("messages.commandsDisabled"));
+    }
+
+    @EventHandler
+    private void onInteract(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        itemsCooldownTool.handleUseItem(event);
     }
 }

@@ -8,6 +8,7 @@ import ru.shirk.antirelog.commands.Commands;
 import ru.shirk.antirelog.listeners.BukkitListeners;
 import ru.shirk.antirelog.modules.ModuleManager;
 import ru.shirk.antirelog.storage.files.ConfigurationManager;
+import ru.shirk.antirelog.tools.ItemsCooldownTool;
 
 import java.io.File;
 import java.util.Objects;
@@ -38,7 +39,7 @@ public final class AntiRelog extends JavaPlugin {
         moduleManager = new ModuleManager(configurationManager);
         Objects.requireNonNull(this.getServer().getPluginCommand("antirelog")).setExecutor(new Commands(combatManager));
         Objects.requireNonNull(this.getServer().getPluginCommand("antirelog")).setTabCompleter(new Commands(combatManager));
-        Bukkit.getPluginManager().registerEvents(new BukkitListeners(combatManager), this);
+        Bukkit.getPluginManager().registerEvents(new BukkitListeners(combatManager, new ItemsCooldownTool()), this);
     }
 
     @Override
