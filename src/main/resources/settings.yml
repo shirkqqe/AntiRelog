@@ -1,19 +1,38 @@
 scoreboard:
   enabled: true
-  title: "title"
+  title: "&x&B&3&7&B&0&0&lР&x&B&D&6&E&0&0&lе&x&C&6&6&2&0&0&lж&x&D&0&5&5&0&0&lи&x&D&9&4&8&0&0&lм &x&E&C&2&F&0&0&lP&x&F&6&2&2&0&0&lV&x&F&F&1&5&0&0&lP"
   board:
-    - ""
-    - "asd"
-    - "dsa"
-    - ""
+    - " "
+    - "&6&l&n◢&f Не выходите"
+    - "&6&l◤&f из игры &4{time} секунд."
+    - " "
+    - " &x&F&F&A&F&0&0С&x&F&7&A&9&0&0о&x&E&E&A&3&0&0п&x&E&6&9&E&0&0е&x&D&D&9&8&0&0р&x&D&5&9&2&0&0н&x&C&C&8&C&0&0и&x&C&4&8&7&0&0к&x&B&B&8&1&0&0и&x&B&3&7&B&0&0:"
+    - "{enemies}"
+    - " "
+    - " &6Вы: &b{player} &7(&b{ping} ⇆&7)"
+    - " "
+    - "   &7-✦- &eКлассик &6#1 &7-✦-"
 bossbar:
   enabled: true
-  title: "BossBar"
+  title: "&x&B&3&7&B&0&0Р&x&B&D&6&E&0&0е&x&C&6&6&2&0&0ж&x&D&0&5&5&0&0и&x&D&9&4&8&0&0м &x&E&C&2&F&0&0P&x&F&6&2&2&0&0V&x&F&F&1&5&0&0P &f- &4{time}&f секунд."
   color: RED
   style: SOLID
 actionbar:
   enabled: true
-  text: "actionbar"
+  text: "&x&B&3&7&B&0&0Р&x&B&D&6&E&0&0е&x&C&6&6&2&0&0ж&x&D&0&5&5&0&0и&x&D&9&4&8&0&0м &x&E&C&2&F&0&0P&x&F&6&2&2&0&0V&x&F&F&1&5&0&0P&f, не выходите из игры &6{time}&f сек."
+  endText: "&b▶ PVP окончено&f, Вы снова можете использовать команды и выходить из игры!"
+title:
+  enabled: true
+  startTitle: "&4ПВП^&fВы вошли в режим &6PVP!" # Title^Subtitle
+  endTitle: "&bПВП^&fВы вышли из режима &bPVP!" # Title^Subtitle
 enemy: " &6&l&n❚&f {player} &7(&b{ping} ⇆&7) {health}/20 &4❤"
 lastEnemy: " &6&l❚ &f{player} &7(&b{ping} ⇆&7) {health}/20 &4❤"
 noEnemies: " Пусто"
+disableCommandsInCombat: true
+messages:
+  startCombat: "&4▶&f Вы вошли в режим &6PVP!"
+  endCombat: "&b▶&f Вы вышли из режима &bPVP!"
+  leaveInCombatBroadcast: "&4▶&f Игрок &c{player} &fпокинул игру во время &x&F&F&6&7&0&0ПВП и был наказан."
+  commandsDisabled: "&4▶&f Вы не можете использовать команды в &6PvP."
+
+

@@ -14,6 +14,7 @@ import ru.shirk.antirelog.AntiRelog;
 import ru.shirk.antirelog.listeners.api.CombatTickEvent;
 import ru.shirk.antirelog.modules.ModuleManager;
 import ru.shirk.antirelog.storage.files.Configuration;
+import ru.shirk.antirelog.tools.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,17 @@ public class CombatPlayer {
 
     public void handleStartCombat() {
         time = 30;
+        AntiRelog.getConfigurationManager().getConfig("settings.yml").sendMessage(base,
+                "messages.startCombat");
+        if (moduleManager.getTitleModule().isEnabled()) {
+            base.sendTitle(
+                    Utils.colorize(moduleManager.getTitleModule().getStartTitle()),
+                    Utils.colorize(moduleManager.getTitleModule().getStartSubTitle()),
+                    10,
+                    20,
+                    10
+            );
+        }
         task = Bukkit.getScheduler().runTaskTimerAsynchronously(AntiRelog.getInstance(), () -> {
             if (time > 0) {
                 final CombatTickEvent event = new CombatTickEvent(time, time - 1, this);
@@ -41,13 +53,18 @@ public class CombatPlayer {
                 return;
             }
             AntiRelog.getCombatManager().endCombat(base);
-        }, 20, 20);
+        }, 0, 20);
     }
 
     public void handleEndCombat() {
         if (task != null) task.cancel();
         time = 0;
         clearModules();
+        AntiRelog.getConfigurationManager().getConfig("settings.yml").sendMessage(base,
+                "messages.endCombat");
+        if (moduleManager.getActionBarModule().isEnabled()) {
+            base.sendActionBar(Utils.colorize(moduleManager.getActionBarModule().getEndText()));
+        }
     }
 
     public void addEnemy(@NonNull CombatPlayer combatPlayer) {
@@ -62,17 +79,21 @@ public class CombatPlayer {
     @SuppressWarnings("deprecation")
     private void showModules() {
         if (moduleManager.getActionBarModule().isEnabled()) {
-            base.sendActionBar(moduleManager.getActionBarModule().getText());
+            base.sendActionBar(Utils.colorize(moduleManager.getActionBarModule().getText().replace("{time}",
+                    String.valueOf(time))));
         }
 
         if (moduleManager.getBossBarModule().isEnabled()) {
             if (bossBar == null) {
                 bossBar = Bukkit.createBossBar(
-                        moduleManager.getBossBarModule().getTitle().replace("{time}", String.valueOf(time)),
+                        Utils.colorize(moduleManager.getBossBarModule().getTitle().replace("{time}",
+                                String.valueOf(time))),
                         moduleManager.getBossBarModule().getColor(),
                         moduleManager.getBossBarModule().getStyle()
                 );
             }
+            bossBar.setTitle(Utils.colorize(moduleManager.getBossBarModule().getTitle().replace("{time}",
+                    String.valueOf(time))));
             bossBar.setVisible(true);
             bossBar.addPlayer(base);
             bossBar.setProgress((double) time / 30);
@@ -88,8 +109,11 @@ public class CombatPlayer {
             final Scoreboard scoreboard = scoreboardManager.createScoreboard(
                     base.getName(),
                     moduleManager.getScoreboardModule().getTitle(),
-                    moduleManager.getScoreboardModule().getLines().stream().map(
-                            line -> line.replace("{enemies}", String.join("\n", buildEnemies()))
+                    moduleManager.getScoreboardModule().getLines().stream().map(line -> line
+                            .replace("{enemies}", String.join("\n", buildEnemies()))
+                            .replace("{time}", String.valueOf(time))
+                            .replace("{player}", base.getName())
+                            .replace("{ping}", String.valueOf(base.getPing()))
                     ).toList()
             );
             scoreboardManager.showScoreboard(tabPlayer, scoreboard);
@@ -101,6 +125,16 @@ public class CombatPlayer {
             bossBar.removeAll();
             bossBar.setVisible(true);
             bossBar = null;
+        }
+
+        if (moduleManager.getTitleModule().isEnabled()) {
+            base.sendTitle(
+                    Utils.colorize(moduleManager.getTitleModule().getEndTitle()),
+                    Utils.colorize(moduleManager.getTitleModule().getEndSubTitle()),
+                    10,
+                    20,
+                    10
+            );
         }
 
         final TabPlayer tabPlayer = TabAPI.getInstance().getPlayer(base.getUniqueId());

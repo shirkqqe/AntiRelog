@@ -1,12 +1,15 @@
 package ru.shirk.antirelog.storage.files;
 
+import lombok.NonNull;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.shirk.antirelog.AntiRelog;
+import ru.shirk.antirelog.tools.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,7 +81,7 @@ public class Configuration {
             this.p.getLogger().warning("No such language caption found: " + name);
             caption = "&c[No language caption found]";
         }
-        return ChatColor.translateAlternateColorCodes('&', caption);
+        return Utils.colorize(caption);
     }
 
     @SuppressWarnings("unused")
@@ -100,11 +103,21 @@ public class Configuration {
 
     public Material m(String name) {
         final Material material = Material.getMaterial(c(name));
-        if(material == null) {
+        if (material == null) {
             Bukkit.getLogger().warning("No such material found: " + name);
             return Material.STONE;
         } else {
             return material;
         }
+    }
+
+    public void sendMessage(@NonNull Player player, @NonNull String name) {
+        String caption = getFile().getString(name);
+        if (caption == null) {
+            this.p.getLogger().warning("No such language caption found: " + name);
+            caption = "&c[No language caption found]";
+        }
+        if (caption.isEmpty()) return;
+        player.sendMessage(Utils.colorize(caption));
     }
 }

@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 import ru.shirk.antirelog.combat.CombatPlayer;
 
 @Getter
-@RequiredArgsConstructor
 public class CombatPreStartEvent extends Event implements Cancellable {
 
     private boolean cancelled = false;
@@ -21,6 +20,14 @@ public class CombatPreStartEvent extends Event implements Cancellable {
     private final @Nullable CombatPlayer damaged;
     private final @NonNull Cause cause;
     private final int timer;
+
+    public CombatPreStartEvent(@Nullable CombatPlayer initiator, @Nullable CombatPlayer damaged, @NonNull Cause cause, int timer) {
+        super(true);
+        this.initiator = initiator;
+        this.damaged = damaged;
+        this.cause = cause;
+        this.timer = timer;
+    }
 
     @Override
     public boolean isCancelled() {

@@ -72,6 +72,10 @@ public class CombatManager implements Listener {
         }
     }
 
+    public boolean inCombat(@NonNull Player player) {
+        return combatPlayers.containsKey(player.getUniqueId());
+    }
+
     public enum Result {
         ALREADY_IN_COMBAT,
         SUCCESS;
