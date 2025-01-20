@@ -2,7 +2,6 @@ package ru.shirk.antirelog.listeners.api;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -46,6 +45,6 @@ public class CombatPreStartEvent extends Event implements Cancellable {
 
     public enum Cause {
         DAMAGE,
-        FORCE;
+        FORCE
     }
 }

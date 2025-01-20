@@ -16,6 +16,7 @@ import ru.shirk.antirelog.AntiRelog;
 import ru.shirk.antirelog.combat.CombatManager;
 import ru.shirk.antirelog.tools.ItemsCooldownTool;
 
+@SuppressWarnings("deprecation")
 @RequiredArgsConstructor
 public class BukkitListeners implements Listener {
 
@@ -25,8 +26,8 @@ public class BukkitListeners implements Listener {
     @EventHandler
     private void onDamage(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player damaged)) return;
-        if (!(event.getDamager() instanceof Player damager)) return;
-        combatManager.startCombatSafe(damager, damaged);
+        if (!(event.getDamager() instanceof Player attacker)) return;
+        combatManager.startCombatSafe(attacker, damaged);
     }
 
     @EventHandler

@@ -33,8 +33,11 @@ public class ItemsCooldownTool {
         if (!cooldowns.containsKey(material)) return;
         if (player.hasCooldown(material)) {
             event.setCancelled(true);
+            player.sendMessage(AntiRelog.getConfigurationManager().getConfig("settings.yml")
+                    .c("messages.itemCooldown").replace("{time}",
+                            String.valueOf(player.getCooldown(material) / 20)));
             return;
         }
-        player.setCooldown(material, cooldowns.get(material));
+        player.setCooldown(material, cooldowns.get(material) * 20);
     }
 }
