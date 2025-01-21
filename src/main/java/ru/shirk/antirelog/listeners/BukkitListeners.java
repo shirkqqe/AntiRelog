@@ -11,10 +11,12 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import ru.shirk.antirelog.AntiRelog;
 import ru.shirk.antirelog.combat.CombatManager;
-import ru.shirk.antirelog.tools.ItemsCooldownTool;
+import ru.shirk.antirelog.modules.cooldowns.ItemsCooldownTool;
+import ru.shirk.antirelog.tools.Utils;
 
 @SuppressWarnings("deprecation")
 @RequiredArgsConstructor
@@ -60,7 +62,15 @@ public class BukkitListeners implements Listener {
 
     @EventHandler
     private void onInteract(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_AIR || event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (!combatManager.inCombat(event.getPlayer())) return;
+        if (!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
+        if (Utils.isConsumeItem(event.getMaterial())) return;
+        itemsCooldownTool.handleUseItem(event);
+    }
+
+    @EventHandler
+    private void onItemConsume(PlayerItemConsumeEvent event) {
+        if (!combatManager.inCombat(event.getPlayer())) return;
         itemsCooldownTool.handleUseItem(event);
     }
 }

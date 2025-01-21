@@ -26,25 +26,29 @@ public class CombatManager implements Listener {
         CombatPlayer combatInitiator = getCombatPlayer(initiator);
         CombatPlayer combatDamaged = getCombatPlayer(damaged);
 
-        if (combatInitiator == null) {
+        if (combatInitiator == null && !initiator.hasPermission("antirelog.bypass")) {
             combatInitiator = new CombatPlayer(initiator);
         }
         if (combatDamaged == null) {
             combatDamaged = new CombatPlayer(damaged);
         }
+
+        if (initiator.hasPermission("antirelog.bypass")) combatInitiator = null;
+        if (damaged.hasPermission("antirelog.bypass")) combatDamaged = null;
+
         final CombatPreStartEvent event = new CombatPreStartEvent(combatInitiator, combatDamaged, CombatPreStartEvent.
                 Cause.DAMAGE, AntiRelog.getConfigurationManager().getConfig("settings.yml").ch("combatTime"));
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return;
 
-        if (!initiator.hasPermission("antirelog.bypass")) {
+        if (combatInitiator != null) {
             combatInitiator.handleStartCombat();
-            combatInitiator.addEnemy(combatDamaged);
+            if (combatDamaged != null) combatInitiator.addEnemy(combatDamaged);
             combatPlayers.putIfAbsent(initiator.getUniqueId(), combatInitiator);
         }
-        if (!damaged.hasPermission("antirelog.bypass")) {
+        if (combatDamaged != null) {
             combatDamaged.handleStartCombat();
-            combatDamaged.addEnemy(combatInitiator);
+            if (combatInitiator != null) combatDamaged.addEnemy(combatInitiator);
             combatPlayers.putIfAbsent(damaged.getUniqueId(), combatDamaged);
         }
     }

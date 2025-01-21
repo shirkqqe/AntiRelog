@@ -44,11 +44,8 @@ public class Commands implements CommandExecutor, TabCompleter {
                     return true;
                 }
                 final CombatManager.Result result = combatManager.forceStartCombat(player);
-                switch (result) {
-                    case SUCCESS -> sender.sendMessage(config.c("messages.forceCombatStart")
-                            .replace("{player}", player.getName()));
-                    case ALREADY_IN_COMBAT -> sender.sendMessage(config.c("messages.playerAlreadyInCombat"));
-                }
+                sender.sendMessage(result == CombatManager.Result.SUCCESS ? config.c("messages.forceCombatStart")
+                        .replace("{player}", player.getName()) : config.c("messages.playerAlreadyInCombat"));
             }
             case "end" -> {
                 if (args.length < 2) {

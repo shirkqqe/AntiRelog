@@ -11,7 +11,7 @@ scoreboard:
     - " "
     - " &6Вы: &b{player} &7(&b{ping} ⇆&7)"
     - " "
-    - "   &7-✦- &eКлассик &6#1 &7-✦-"
+    - "   &7-✦- &eКлассик &6#0 &7-✦-"
 bossbar:
   enabled: true
   title: "&x&B&3&7&B&0&0Р&x&B&D&6&E&0&0е&x&C&6&6&2&0&0ж&x&D&0&5&5&0&0и&x&D&9&4&8&0&0м &x&E&C&2&F&0&0P&x&F&6&2&2&0&0V&x&F&F&1&5&0&0P &f- &4{time}&f секунд."
@@ -29,7 +29,7 @@ enemy: " &6&l&n❚&f {player} &7(&b{ping} ⇆&7) {health}/20 &4❤"
 lastEnemy: " &6&l❚ &f{player} &7(&b{ping} ⇆&7) {health}/20 &4❤"
 noEnemies: " Пусто"
 disableCommandsInCombat: true
-cooldowns:
+cooldowns: # example: MATERIAL: time (in seconds, max 107374182)
   GOLDEN_APPLE: 15
 combatTime: 30
 messages:

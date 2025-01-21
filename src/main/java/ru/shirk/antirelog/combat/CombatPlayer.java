@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.shirk.antirelog.AntiRelog;
 import ru.shirk.antirelog.listeners.api.CombatTickEvent;
 import ru.shirk.antirelog.modules.ModuleManager;
+import ru.shirk.antirelog.modules.cooldowns.CooldownItem;
 import ru.shirk.antirelog.storage.files.Configuration;
 import ru.shirk.antirelog.tools.Utils;
 
@@ -30,6 +31,7 @@ public class CombatPlayer {
     private final @NonNull ModuleManager moduleManager = AntiRelog.getModuleManager();
     private @Nullable BossBar bossBar;
     private @Nullable BukkitTask task;
+    private final @NonNull ArrayList<CooldownItem> cooldownItems = new ArrayList<>();
 
     public void handleStartCombat() {
         time = AntiRelog.getConfigurationManager().getConfig("settings.yml").ch("combatTime");
@@ -56,7 +58,9 @@ public class CombatPlayer {
         }, 0, 20);
     }
 
+    @SuppressWarnings("deprecation")
     public void handleEndCombat() {
+        base.resetCooldown();
         if (task != null) task.cancel();
         time = 0;
         clearModules();
