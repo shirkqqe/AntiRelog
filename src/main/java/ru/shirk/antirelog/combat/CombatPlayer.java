@@ -30,7 +30,7 @@ public class CombatPlayer {
 
     private final @NonNull Player base;
     @Setter(AccessLevel.PUBLIC)
-    private int time;
+    private int time = 0;
     private final @NonNull ArrayList<CombatPlayer> enemies = new ArrayList<>();
     private final @NonNull ModuleManager moduleManager = AntiRelog.getModuleManager();
     private @Nullable BossBar bossBar;
@@ -38,28 +38,34 @@ public class CombatPlayer {
     private final @NonNull ArrayList<CooldownItem> cooldownItems = new ArrayList<>();
 
     public void handleStartCombat() {
-        time = AntiRelog.getConfigurationManager().getConfig("settings.yml").ch("combatTime");
-        AntiRelog.getConfigurationManager().getConfig("settings.yml").sendMessage(base,
-                "messages.startCombat");
-        if (moduleManager.getTitleModule().isEnabled()) {
-            base.sendTitle(
-                    Utils.colorize(moduleManager.getTitleModule().getStartTitle()),
-                    Utils.colorize(moduleManager.getTitleModule().getStartSubTitle()),
-                    10,
-                    20,
-                    10
-            );
-        }
-        task = Bukkit.getScheduler().runTaskTimerAsynchronously(AntiRelog.getInstance(), () -> {
-            if (time > 0) {
-                final CombatTickEvent event = new CombatTickEvent(time, time - 1, this);
-                Bukkit.getPluginManager().callEvent(event);
-                showModules();
-                time--;
-                return;
+        if (time == 0) {
+            AntiRelog.getConfigurationManager().getConfig("settings.yml").sendMessage(base,
+                    "messages.startCombat");
+            if (moduleManager.getTitleModule().isEnabled()) {
+                base.sendTitle(
+                        Utils.colorize(moduleManager.getTitleModule().getStartTitle()),
+                        Utils.colorize(moduleManager.getTitleModule().getStartSubTitle()),
+                        10,
+                        20,
+                        10
+                );
             }
-            AntiRelog.getCombatManager().endCombat(base);
-        }, 0, 20);
+        }
+        time = AntiRelog.getConfigurationManager().getConfig("settings.yml").ch("combatTime");
+        if (task == null) {
+            task = Bukkit.getScheduler().runTaskTimerAsynchronously(AntiRelog.getInstance(), () -> {
+                if (time > 0) {
+                    final CombatTickEvent event = new CombatTickEvent(time, time - 1, this);
+                    Bukkit.getPluginManager().callEvent(event);
+                    showModules();
+                    time--;
+                    return;
+                }
+                AntiRelog.getCombatManager().endCombat(base);
+            }, 0, 20);
+            return;
+        }
+        showModules();
     }
 
     @SuppressWarnings("deprecation")

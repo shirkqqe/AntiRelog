@@ -18,7 +18,7 @@ public class CombatStartEvent extends Event {
     private static final HandlerList handlerList = new HandlerList();
 
     public CombatStartEvent(@NonNull CombatPreStartEvent.Cause cause, @Nullable CombatPlayer initiator, @Nullable CombatPlayer damaged) {
-        super(true);
+        super();
         this.cause = cause;
         this.initiator = initiator;
         this.damaged = damaged;

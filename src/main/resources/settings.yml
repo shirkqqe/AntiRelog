@@ -29,8 +29,10 @@ enemy: " &6&l&n❚&f {player} &7(&b{ping} ⇆&7) {health}/20 &4❤"
 lastEnemy: " &6&l❚ &f{player} &7(&b{ping} ⇆&7) {health}/20 &4❤"
 noEnemies: " Пусто"
 disableCommandsInCombat: true
-cooldowns: # example: MATERIAL: time (in seconds, max 107374182)
+cooldowns: # example: MATERIAL: time (in seconds, max 2147483647)
   GOLDEN_APPLE: 15
+commandWhitelist:
+  - "msg"
 combatTime: 30
 messages:
   startCombat: "&4▶&f Вы вошли в режим &6PVP!"

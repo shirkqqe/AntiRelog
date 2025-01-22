@@ -21,7 +21,7 @@ public class CombatPreStartEvent extends Event implements Cancellable {
     private final int timer;
 
     public CombatPreStartEvent(@Nullable CombatPlayer initiator, @Nullable CombatPlayer damaged, @NonNull Cause cause, int timer) {
-        super(true);
+        super();
         this.initiator = initiator;
         this.damaged = damaged;
         this.cause = cause;

@@ -57,7 +57,9 @@ public class BukkitListeners implements Listener {
         final Player player = event.getPlayer();
         if (!combatManager.inCombat(player)) return;
         if (!AntiRelog.getConfigurationManager().getConfig("settings.yml").getFile()
-                .getBoolean("disableCommandsInCombat")) return;
+                .getBoolean("disableCommandsInCombat") || AntiRelog.getConfigurationManager()
+                .getConfig("settings.yml").getFile().getStringList("commandWhitelist").contains(event
+                        .getMessage().replace("/", "").split(" ")[0])) return;
         event.setCancelled(true);
         player.sendMessage(AntiRelog.getConfigurationManager().getConfig("settings.yml")
                 .c("messages.commandsDisabled"));
