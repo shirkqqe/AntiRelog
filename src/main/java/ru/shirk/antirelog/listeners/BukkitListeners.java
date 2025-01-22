@@ -1,10 +1,13 @@
 package ru.shirk.antirelog.listeners;
 
+import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -15,7 +18,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import ru.shirk.antirelog.AntiRelog;
 import ru.shirk.antirelog.combat.CombatManager;
-import ru.shirk.antirelog.modules.cooldowns.ItemsCooldownTool;
+import ru.shirk.antirelog.combat.cooldowns.ItemsCooldownTool;
 import ru.shirk.antirelog.tools.Utils;
 
 @SuppressWarnings("deprecation")
@@ -25,21 +28,21 @@ public class BukkitListeners implements Listener {
     private final @NonNull CombatManager combatManager;
     private final @NonNull ItemsCooldownTool itemsCooldownTool;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     private void onDamage(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player damaged)) return;
         if (!(event.getDamager() instanceof Player attacker)) return;
         combatManager.startCombatSafe(attacker, damaged);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     private void onPlayerDeath(PlayerDeathEvent event) {
         final Player player = event.getEntity();
         if (!combatManager.inCombat(player)) return;
         combatManager.endCombat(player);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     private void onQuit(PlayerQuitEvent event) {
         final Player player = event.getPlayer();
         if (!combatManager.inCombat(player)) return;
@@ -49,7 +52,7 @@ public class BukkitListeners implements Listener {
                 .c("messages.leaveInCombatBroadcast").replace("{player}", player.getName()));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     private void onCommand(PlayerCommandPreprocessEvent event) {
         final Player player = event.getPlayer();
         if (!combatManager.inCombat(player)) return;
@@ -60,16 +63,22 @@ public class BukkitListeners implements Listener {
                 .c("messages.commandsDisabled"));
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     private void onInteract(PlayerInteractEvent event) {
         if (!combatManager.inCombat(event.getPlayer())) return;
         if (!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
-        if (Utils.isConsumeItem(event.getMaterial())) return;
+        if (Utils.isConsumeItem(event.getMaterial()) || event.getMaterial().equals(Material.ENDER_PEARL)) return;
         itemsCooldownTool.handleUseItem(event);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     private void onItemConsume(PlayerItemConsumeEvent event) {
+        if (!combatManager.inCombat(event.getPlayer())) return;
+        itemsCooldownTool.handleUseItem(event);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    private void onLaunchProjectile(final PlayerLaunchProjectileEvent event) {
         if (!combatManager.inCombat(event.getPlayer())) return;
         itemsCooldownTool.handleUseItem(event);
     }

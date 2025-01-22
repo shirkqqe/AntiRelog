@@ -6,18 +6,22 @@ import me.neznamy.tab.api.TabPlayer;
 import me.neznamy.tab.api.scoreboard.Scoreboard;
 import me.neznamy.tab.api.scoreboard.ScoreboardManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Nullable;
 import ru.shirk.antirelog.AntiRelog;
+import ru.shirk.antirelog.combat.cooldowns.CooldownItem;
 import ru.shirk.antirelog.listeners.api.CombatTickEvent;
 import ru.shirk.antirelog.modules.ModuleManager;
-import ru.shirk.antirelog.modules.cooldowns.CooldownItem;
 import ru.shirk.antirelog.storage.files.Configuration;
 import ru.shirk.antirelog.tools.Utils;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -60,7 +64,6 @@ public class CombatPlayer {
 
     @SuppressWarnings("deprecation")
     public void handleEndCombat() {
-        base.resetCooldown();
         if (task != null) task.cancel();
         time = 0;
         clearModules();
@@ -68,6 +71,42 @@ public class CombatPlayer {
                 "messages.endCombat");
         if (moduleManager.getActionBarModule().isEnabled()) {
             base.sendActionBar(Utils.colorize(moduleManager.getActionBarModule().getEndText()));
+        }
+    }
+
+    public void setCooldownItem(@NonNull CooldownItem cooldownItem) {
+        if (hasCooldown(cooldownItem.material())) {
+            removeCooldownItem(cooldownItem.material());
+        }
+        cooldownItems.add(cooldownItem);
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public boolean hasCooldown(@NonNull Material material) {
+        if (cooldownItems.isEmpty()) return false;
+        for (CooldownItem cooldownItem : cooldownItems) {
+            if (!cooldownItem.material().equals(material)) continue;
+            return true;
+        }
+        return false;
+    }
+
+    public int getCooldown(@NonNull Material material) {
+        if (cooldownItems.isEmpty()) return -1;
+        for (CooldownItem cooldownItem : cooldownItems) {
+            if (!cooldownItem.material().equals(material)) continue;
+            return (int) Duration.between(LocalDateTime.now(), cooldownItem.endDate()).getSeconds();
+        }
+        return -1;
+    }
+
+    public void removeCooldownItem(@NonNull Material material) {
+        if (cooldownItems.isEmpty()) return;
+        final Iterator<CooldownItem> iterator = cooldownItems.iterator();
+        while (iterator.hasNext()) {
+            final CooldownItem cooldownItem = iterator.next();
+            if (!cooldownItem.material().equals(material)) continue;
+            iterator.remove();
         }
     }
 

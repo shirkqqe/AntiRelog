@@ -78,8 +78,21 @@ public class CombatManager implements Listener {
         }
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean inCombat(@NonNull Player player) {
         return combatPlayers.containsKey(player.getUniqueId());
+    }
+
+    public void update(@NonNull CombatPlayer combatPlayer) {
+        combatPlayers.replace(combatPlayer.getBase().getUniqueId(), combatPlayer);
+    }
+
+    public void endAll() {
+        for (CombatPlayer combatPlayer : combatPlayers.values()) {
+            if (combatPlayer == null) continue;
+            combatPlayer.handleEndCombat();
+        }
+        combatPlayers.clear();
     }
 
     public enum Result {

@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.shirk.antirelog.AntiRelog;
 import ru.shirk.antirelog.combat.CombatManager;
+import ru.shirk.antirelog.combat.cooldowns.ItemsCooldownTool;
 import ru.shirk.antirelog.storage.files.Configuration;
 
 import java.util.List;
@@ -62,6 +63,7 @@ public class Commands implements CommandExecutor, TabCompleter {
             }
             case "reload" -> {
                 AntiRelog.getConfigurationManager().reloadConfigs();
+                ItemsCooldownTool.reload();
                 sender.sendMessage(config.c("messages.reloaded"));
             }
         }

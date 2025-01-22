@@ -10,4 +10,6 @@ softdepend:
 
 commands:
   antirelog:
+    aliases:
+      - ar
     description: ""

@@ -4,11 +4,11 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.shirk.antirelog.combat.CombatManager;
+import ru.shirk.antirelog.combat.cooldowns.ItemsCooldownTool;
 import ru.shirk.antirelog.commands.Commands;
 import ru.shirk.antirelog.listeners.BukkitListeners;
 import ru.shirk.antirelog.modules.ModuleManager;
 import ru.shirk.antirelog.storage.files.ConfigurationManager;
-import ru.shirk.antirelog.modules.cooldowns.ItemsCooldownTool;
 
 import java.io.File;
 import java.util.Objects;
@@ -39,12 +39,13 @@ public final class AntiRelog extends JavaPlugin {
         moduleManager = new ModuleManager(configurationManager);
         Objects.requireNonNull(this.getServer().getPluginCommand("antirelog")).setExecutor(new Commands(combatManager));
         Objects.requireNonNull(this.getServer().getPluginCommand("antirelog")).setTabCompleter(new Commands(combatManager));
-        Bukkit.getPluginManager().registerEvents(new BukkitListeners(combatManager, new ItemsCooldownTool()),
+        Bukkit.getPluginManager().registerEvents(new BukkitListeners(combatManager, new ItemsCooldownTool(combatManager)),
                 this);
     }
 
     @Override
     public void onDisable() {
+        combatManager.endAll();
         instance = null;
     }
 
