@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.Nullable;
 import ru.shirk.antirelog.AntiRelog;
+import ru.shirk.antirelog.listeners.api.CombatEndEvent;
 import ru.shirk.antirelog.listeners.api.CombatPreStartEvent;
 
 import java.util.HashMap;
@@ -67,6 +68,7 @@ public class CombatManager implements Listener {
     public void endCombat(@NonNull Player player) {
         CombatPlayer combatPlayer = getCombatPlayer(player);
         if (combatPlayer == null) return;
+        Bukkit.getPluginManager().callEvent(new CombatEndEvent(combatPlayer));
         combatPlayer.handleEndCombat();
         removeEnemyAll(combatPlayer);
         combatPlayers.remove(player.getUniqueId());

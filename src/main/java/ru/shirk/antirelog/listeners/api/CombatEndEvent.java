@@ -14,7 +14,7 @@ public class CombatEndEvent extends Event {
     private final CombatPlayer combatPlayer;
 
     public CombatEndEvent(CombatPlayer combatPlayer) {
-        super(true);
+        super();
         this.combatPlayer = combatPlayer;
     }
 
