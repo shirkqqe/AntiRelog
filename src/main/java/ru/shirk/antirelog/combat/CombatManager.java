@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import ru.shirk.antirelog.AntiRelog;
 import ru.shirk.antirelog.listeners.api.CombatEndEvent;
 import ru.shirk.antirelog.listeners.api.CombatPreStartEvent;
+import ru.shirk.antirelog.listeners.api.CombatStartEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +53,11 @@ public class CombatManager implements Listener {
             if (combatInitiator != null) combatDamaged.addEnemy(combatInitiator);
             combatPlayers.putIfAbsent(damaged.getUniqueId(), combatDamaged);
         }
+        Bukkit.getPluginManager().callEvent(new CombatStartEvent(
+                CombatPreStartEvent.Cause.DAMAGE,
+                combatInitiator,
+                combatDamaged
+        ));
     }
 
     public @NonNull Result forceStartCombat(@NonNull Player player) {
@@ -99,6 +105,6 @@ public class CombatManager implements Listener {
 
     public enum Result {
         ALREADY_IN_COMBAT,
-        SUCCESS;
+        SUCCESS
     }
 }

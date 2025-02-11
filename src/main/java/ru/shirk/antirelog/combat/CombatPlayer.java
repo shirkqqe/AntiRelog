@@ -15,7 +15,6 @@ import ru.shirk.antirelog.AntiRelog;
 import ru.shirk.antirelog.combat.cooldowns.CooldownItem;
 import ru.shirk.antirelog.listeners.api.CombatTickEvent;
 import ru.shirk.antirelog.modules.ModuleManager;
-import ru.shirk.antirelog.storage.files.Configuration;
 import ru.shirk.antirelog.tools.Utils;
 
 import java.time.Duration;
@@ -159,12 +158,7 @@ public class CombatPlayer {
             final Scoreboard scoreboard = scoreboardManager.createScoreboard(
                     base.getName(),
                     moduleManager.getScoreboardModule().getTitle(),
-                    moduleManager.getScoreboardModule().getLines().stream().map(line -> line
-                            .replace("{enemies}", String.join("\n", buildEnemies()))
-                            .replace("{time}", String.valueOf(time))
-                            .replace("{player}", base.getName())
-                            .replace("{ping}", String.valueOf(base.getPing()))
-                    ).toList()
+                    buildLinesWithEnemies()
             );
             scoreboardManager.showScoreboard(tabPlayer, scoreboard);
         }
@@ -194,27 +188,60 @@ public class CombatPlayer {
         scoreboardManager.resetScoreboard(tabPlayer);
     }
 
-    public @NonNull List<String> buildEnemies() {
-        final Configuration configuration = AntiRelog.getConfigurationManager().getConfig("settings.yml");
-        if (enemies.isEmpty()) return List.of(configuration.c("noEnemies"));
-        final List<String> build = new ArrayList<>();
-        for (int i = 0; i < enemies.size(); i++) {
-            final CombatPlayer combatPlayer = enemies.get(i);
+    private List<String> buildLinesWithEnemies() {
+        List<String> lines = new ArrayList<>(moduleManager.getScoreboardModule().getLines().stream().map(line -> line
+                .replace("{time}", String.valueOf(time))
+                .replace("{player}", base.getName())
+                .replace("{ping}", String.valueOf(base.getPing()))
+        ).toList());
+
+        int enemiesIndex = lines.indexOf("{enemies}");
+        if (enemiesIndex == -1) return lines;
+        if (enemies.isEmpty()) {
+            lines.remove(enemiesIndex);
+            lines.add(enemiesIndex, AntiRelog.getConfigurationManager().getConfig("settings.yml")
+                    .c("noEnemies"));
+            return lines;
+        }
+        final ArrayList<String> enemiesList = getSortedEnemyList();
+        lines.remove(enemiesIndex);
+        lines.addAll(enemiesIndex, enemiesList);
+        return lines;
+    }
+
+    private @NonNull ArrayList<String> getSortedEnemyList() {
+        final CombatPlayer[] enemies = this.enemies.toArray(new CombatPlayer[0]);
+        final ArrayList<String> enemiesLines = new ArrayList<>();
+        if (this.enemies.size() == 1) {
+            for (CombatPlayer enemy : enemies) {
+                if (enemy == null) continue;
+                enemiesLines.add(AntiRelog.getConfigurationManager().getConfig("settings.yml")
+                        .c("lastEnemy")
+                        .replace("{player}", enemy.getBase().getName())
+                        .replace("{ping}", String.valueOf(enemy.getBase().getPing()))
+                        .replace("{health}", String.valueOf((int) enemy.getBase().getHealth()))
+                );
+            }
+            return enemiesLines;
+        }
+        for (int i = 0; i < this.enemies.size(); i++) {
+            final CombatPlayer combatPlayer = enemies[i];
             if (combatPlayer == null) continue;
-            if (i == enemies.size() - 1) {
-                build.add(configuration.c("lastEnemy")
-                        .replace("{player}", combatPlayer.base.getName())
-                        .replace("{ping}", String.valueOf(combatPlayer.base.getPing()))
-                        .replace("{health}", String.valueOf((int) combatPlayer.base.getHealth()))
+            if (i == this.enemies.size() - 1) {
+                enemiesLines.add(AntiRelog.getConfigurationManager().getConfig("settings.yml")
+                        .c("lastEnemy")
+                        .replace("{player}", combatPlayer.getBase().getName())
+                        .replace("{ping}", String.valueOf(combatPlayer.getBase().getPing()))
+                        .replace("{health}", String.valueOf((int) combatPlayer.getBase().getHealth()))
                 );
                 continue;
             }
-            build.add(configuration.c("enemy")
-                    .replace("{player}", combatPlayer.base.getName())
-                    .replace("{ping}", String.valueOf(combatPlayer.base.getPing()))
-                    .replace("{health}", String.valueOf((int) combatPlayer.base.getHealth()))
-            );
+            enemiesLines.add(AntiRelog.getConfigurationManager().getConfig("settings.yml")
+                    .c("enemy")
+                    .replace("{player}", combatPlayer.getBase().getName())
+                    .replace("{ping}", String.valueOf(combatPlayer.getBase().getPing()))
+                    .replace("{health}", String.valueOf((int) combatPlayer.getBase().getHealth())));
         }
-        return build;
+        return enemiesLines;
     }
 }
